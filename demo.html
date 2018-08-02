@@ -1,0 +1,127 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet"  href="css/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <style>
+  
+  </style>
+</head>
+<body>
+  <!-- <h2>todos</h2>
+  <div>
+   <input class="select_all" type="checkbox">
+    <input type="text"  id="todo_item" />
+      <ul class="list">
+        <li class="items">
+        </li>
+        <div class="sort">
+        </div>
+      </ul>
+      <div></div>
+  </div> -->
+  <h1><input type="text" id="new-text" placeholder="Input text here..."/></h1>
+<ul id="todo-list">
+</ul>
+<br>
+<input type="checkbox" id="toggle-all"/>
+<br>
+<br>
+<button type="checkbox" id="clearcompleted">Clear completed</button>
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+ 
+ <script>
+    // $(document).ready(function(){
+    //   $('#todo_item').on('change', function(){
+    //     $('.items').append("<input class='select_item' type='checkbox'/>"+$(this).val()+"<br/>");
+    //     $('#todo_item').val("");
+    //   });
+    // });  
+    function addListItem() {
+    var text = $('#new-text').val();
+    $("#todo-list").append('<li ><input type="checkbox" class="toggle"/ ><span class="text">' + text + ' </span><button class="destroy"></button></li>');
+    $("#new-text").val('');
+}
+
+function clearCompleted() {
+    $("#todo-list .toggle:checked").parent().remove();
+}
+
+function deleteItem() {
+    $(this).parent().remove();
+}
+
+function completed() {
+    if ( $(this).parent().css('textDecoration') == 'line-through' )
+    {
+        $(this).parent().css('textDecoration', 'none');
+        $(this).parent().css('opacity', '1');
+    }
+    else
+    {
+        $(this).parent().css('textDecoration', 'line-through');
+        $(this).parent().css('opacity', '0.50');
+    }
+}
+
+
+$(document).ready(function(){
+    $('#new-text').keyup(function(e)
+    {
+        if (e.keyCode === 13)
+        {
+            addListItem();
+        }
+    });
+    $(document).on('click', '.destroy', deleteItem);
+    $("#toggle-all").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        if ( $('li').css('textDecoration') == 'line-through' ) {
+            $('li').css('textDecoration', 'none');
+            $('li').parent().css('opacity', '1');
+        } else {
+            $('li').css('textDecoration', 'line-through');
+            $('li').parent().css('opacity', '0.5');
+        }
+    });
+    $(document).on('click', '.toggle', completed);
+    $("#clearcompleted").click(clearCompleted);
+    $('#todo-list').on('dblclick', 'span', function () {
+        var thisData = this.innerHTML,
+            $el = $('<input type="text" class="in-edit-text"/>');
+        $(this).replaceWith($el);
+        $el.val(thisData).focus();
+        $(this).find(".text").hide();
+        $(this).find(".destroy").hide();
+    });
+
+    $('#todo-list').on('keyup', '.in-edit-text', (function(e) {
+        if (e.keyCode === 13) {
+            $(this).replaceWith($('<span class="text">' + $(this).val() + '</span>'));
+        }
+        if (e.keyCode == 27) {
+            $('.in-edit-text').remove();
+        }
+    }));
+});
+  </script>
+</body>
+</html>
